@@ -22,9 +22,7 @@ userService.getUserEmail = async (email) => {
   }
 };
 
-// userService.finduser = async (matchFiels)=>{
-//     return User.findOne({...matchFiels})
-// }
+
 
 userService.userLogin = async (email, password) => {
   try {
@@ -44,5 +42,18 @@ userService.userLogin = async (email, password) => {
     return false;
   }
 };
+
+// userService.finduser = async (matchField) => {
+//     return User.findOne({...matchField})
+// }
+
+userService.getusers = async () => {
+ return User.find({})  
+}
+
+userService.deleteUser = async(id, updateFields)=>{
+     return User.findByIdAndUpdate({_id:id}, {...updateFields}, {new:true})
+}
+
 
 module.exports = userService;

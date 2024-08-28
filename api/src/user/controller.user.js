@@ -79,4 +79,34 @@ userController.userLogin = async (req, res) => {
   }
 };
 
+userController.getUsers = async (req, res) => {
+  try {
+    let getuser = await userService.getusers();
+    if (!getuser.length) {
+      return res.send({ status: "ERR", msg: "Users not avalable", data: null });
+    }
+    return res.send({ status: "OK", msg: "Get Users", data: getuser });
+  } catch (err) {
+    return res.send({ status: "ERR", msg: "something went wrong", data: null });
+  }
+};
+
+userController.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteUser = await userService.deleteUser(id,{$set: {isDeleted:true}});
+    if (deleteUser === null) {
+      return res.send({ status: "ERR", msg: "User Not Found", data: deleteUser });
+    }
+    return res.send({
+      status: "OK",
+      msg: "Transaction Delete Successfulluy",
+      data: deleteUser,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.send({ status: "ERR", msg: "something went wrong", data: null });
+  }
+};
+
 module.exports = userController;
