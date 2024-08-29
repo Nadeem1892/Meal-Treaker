@@ -1,11 +1,10 @@
 const userService = require("./service.user");
 const jwt = require("jsonwebtoken");
-
 require("dotenv").config();
 const userController = {};
 
 userController.registerUser = async (req, res) => {
-  const { name, email, password, confirmPassword} = req.body;
+  const { name, email, password, confirmPassword } = req.body;
 
   if (password !== confirmPassword) {
     return res.status(400).json({ message: "Passwords do not match" });
@@ -55,11 +54,10 @@ userController.userLogin = async (req, res) => {
       });
     }
 
-    
     let user = await userService.userLogin(email, password);
 
     if (!user) {
-      return res.send({message:"User not found"})
+      return res.send({ message: "User not found" });
     }
 
     if (user) {
@@ -130,7 +128,7 @@ userController.updateUser = async (req, res) => {
     const { name, email } = req.body;
     const { id } = req.params;
     // validation of Fields
-    if (!name || !email ) {
+    if (!name || !email) {
       return res.send({
         status: "ERR",
         msg: "name, email, password are required",
@@ -158,7 +156,17 @@ userController.updatepassword = async (req, res) => {
   try {
     const { currentPassword, newPassword, confirmPassword } = req.body;
     const { id } = req.params;
-    // Validate that all password fields 
+
+    // Ensure the ID in the token matches the ID in the request
+    if (req._id !== id) {
+      return res.send({
+        status: "ERR",
+        msg: "You are not authorized to update this user's password",
+        data: null,
+      });
+    }
+
+    // Validate that all password fields
     if (!currentPassword || !newPassword || !confirmPassword) {
       return res.send({
         status: "ERR",
@@ -169,7 +177,7 @@ userController.updatepassword = async (req, res) => {
 
     // Fetch the user from the database
     const user = await userService.getUserById(id);
- 
+
     if (!user) {
       return res.send({
         status: "ERR",
@@ -178,17 +186,20 @@ userController.updatepassword = async (req, res) => {
       });
     }
 
-     // Verify the current password with the hashed password
-     const isCurrentPasswordValid = await userService.verifyCurrentPassword(user, currentPassword);
-     if (!isCurrentPasswordValid) {
-       return res.send({
-         status: "ERR",
-         msg: "Current password is incorrect",
-         data: null,
-       });
-     }
+    // Verify the current password with the hashed password
+    const isCurrentPasswordValid = await userService.verifyCurrentPassword(
+      user,
+      currentPassword
+    );
+    if (!isCurrentPasswordValid) {
+      return res.send({
+        status: "ERR",
+        msg: "Current password is incorrect",
+        data: null,
+      });
+    }
 
-      // Check if the new password matches the confirm password
+    // Check if the new password matches the confirm password
     if (newPassword !== confirmPassword) {
       return res.send({
         status: "ERR",
@@ -197,12 +208,9 @@ userController.updatepassword = async (req, res) => {
       });
     }
 
-
-     
-       // Hash the new password and update it in the database
+    // Hash the new password and update it in the database
     const updatePass = await userService.hashPassword(newPassword);
     await userService.updatePassword(id, updatePass);
-
 
     return res.send({
       status: "OK",
@@ -213,6 +221,6 @@ userController.updatepassword = async (req, res) => {
     console.log(error);
     return res.send({ status: "ERR", msg: "Something went wrong", data: null });
   }
-}
+};
 
 module.exports = userController;
