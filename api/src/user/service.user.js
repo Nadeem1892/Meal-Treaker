@@ -22,8 +22,6 @@ userService.getUserEmail = async (email) => {
   }
 };
 
-
-
 userService.userLogin = async (email, password) => {
   try {
     let user = await User.findOne({ email });
@@ -43,17 +41,40 @@ userService.userLogin = async (email, password) => {
   }
 };
 
-// userService.finduser = async (matchField) => {
-//     return User.findOne({...matchField})
-// }
-
 userService.getusers = async () => {
- return User.find({})  
+  return User.find({});
+};
+
+userService.deleteUser = async (id, updateFields) => {
+  return User.findByIdAndUpdate(
+    { _id: id },
+    { ...updateFields },
+    { new: true }
+  );
+};
+
+userService.updateuser = async (id,{ name, email}) => {
+return User.findOneAndUpdate({_id:id},{name, email})
 }
 
-userService.deleteUser = async(id, updateFields)=>{
-     return User.findByIdAndUpdate({_id:id}, {...updateFields}, {new:true})
-}
+userService.verifyCurrentPassword = async (user, currentPassword) => {
 
+  // Compare the current password with the stored hashed password
+  return await bcrypt.compare(currentPassword, user.password);
+},
+
+userService.getUserById = async (id) => {
+  // Fetch the user by ID from the database
+  return await User.findById(id);
+},
+
+userService.hashPassword = async (password)=> {
+  // Hash the new password
+  return await bcrypt.hash(password, 10);
+},
+
+userService.updatePassword = async (id, updatePass) => {
+  return await User.findByIdAndUpdate(id,{password:updatePass},{new:true});
+}
 
 module.exports = userService;
