@@ -1,42 +1,47 @@
 const userService = require("./service.user");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 const userController = {};
 
 userController.registerUser = async (req, res) => {
-  const { name, email, password, confirmPassword } = req.body;
-
-  if (password !== confirmPassword) {
-    return res.status(400).json({ message: "Passwords do not match" });
-  }
-  // validation of Fields
-  if (!name || !email || !password || !confirmPassword) {
-    return res.send({
-      status: "ERR",
-      msg: "name, email, password are required",
-      data: null,
-    });
-  }
-
-  //Check user
-  const { data } = await userService.getUserEmail(email);
-  if (data.length) {
-    return res.send({ status: "ERR", msg: "Email Already Exists", data: null });
-  }
-  //User Register
   try {
-    let newUser = await userService.registerUser({ name, email, password });
-    if (newUser.status != "OK") {
+    const { name, email, password, confirmPassword } = req.body;
+    // if (password !== confirmPassword) {
+    //   return res.status(400).json({ message: "Passwords do not match" });
+    // }
+    // validation of Fields
+    if (!name || !email || !password || !confirmPassword) {
       return res.send({
         status: "ERR",
-        msg: "something went wrong",
+        msg: "name, email, password are required",
         data: null,
       });
     }
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    //Check user
+    const  data  = await userService.getUserEmail(email);
+    if (data.length) {
+      return res.send({
+        status: "ERR",
+        msg: "Email Already Exists",
+        data: data[0]?.email,
+      });
+    }
+    //User Register
+    const hash = bcrypt.hashSync(password, 10);
+    let newUser = await userService.registerUser({
+      name,
+      email,
+      password: hash,
+    });
     return res.send({
       status: "OK",
       msg: "User Register Successfully",
-      data: newUser.data,
+      data: newUser,
     });
   } catch (err) {
     return res.send({ status: "ERR", msg: "something went wrong", data: null });
@@ -46,6 +51,8 @@ userController.registerUser = async (req, res) => {
 userController.userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    // check validation
     if (!email || !password) {
       return res.send({
         status: "ERR",
@@ -54,36 +61,40 @@ userController.userLogin = async (req, res) => {
       });
     }
 
-    let user = await userService.userLogin(email, password);
+    let user = await userService.getUserEmail(email);
 
-    if (!user) {
-      return res.send({ message: "User not found" });
-    }
+    if (user.length && user[0]?.email === email) {
+      let { password: hash } = user[0];
+      let isMatched = bcrypt.compareSync(password, hash);
 
-    if (user) {
-      var token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-      return res.send({
-        status: "OK",
-        message: "login successfully",
-        data: {
-          token: token,
-          userId: user._id,
-          name: user.name,
-          email: user.email,
-        },
-        code: "OK",
-        issue: null,
-      });
+      if (isMatched) {
+        var token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
+
+        return res.send({
+          status: "OK",
+          message: "login successfully",
+          data: {
+            token: token,
+            userId: user[0]?._id,
+            name: user[0]?.name,
+            email: user[0]?.email,
+          },
+          code: "OK",
+          issue: null,
+        });
+      } else {
+        return res.send({
+          status: false,
+          message: "Login failed",
+          code: "ERROR",
+          issue: "Invalid  password",
+        });
+      }
     } else {
-      return res.send({
-        status: false,
-        message: "Login failed",
-        code: "ERROR",
-        issue: "Invalid email or password",
-      });
+      return res.send({ message: "User not found or Email mismatch" });
     }
   } catch (error) {
-    return res.send(error);
+    return res.send({ message: "Somthing want wrong", Error:error });
   }
 };
 
@@ -100,27 +111,46 @@ userController.getUsers = async (req, res) => {
 };
 
 userController.deleteUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deleteUser = await userService.deleteUser(id, {
-      $set: { isDeleted: true },
+try {
+  const { id } = req.params;
+  // Mark user as deleted by setting isDeleted to true
+  const deleteUser = await userService.deleteUser(id, {
+    $set: { isDeleted: true },
+  });
+
+  console.log(deleteUser);
+  
+  if (!deleteUser) {
+    // If the user doesn't exist (no user with that id)
+    return res.send({
+      status: "ERR",
+      msg: "User not found.",
+      data: null,
     });
-    if (deleteUser === null) {
-      return res.send({
-        status: "ERR",
-        msg: "User Not Found",
-        data: deleteUser,
-      });
-    }
+  } else if (deleteUser.isDeleted) {
+    // Check if the user was already marked as deleted
     return res.send({
       status: "OK",
-      msg: "Transaction Delete Successfulluy",
+      msg: "User successfully deleted.",
       data: deleteUser,
     });
-  } catch (err) {
-    console.log(err);
-    return res.send({ status: "ERR", msg: "something went wrong", data: null });
+  } else {
+    // User was just marked as deleted
+ 
+    return res.send({
+      status: "OK",
+      msg: "This user was already deleted.",
+      data: deleteUser._id,
+    });
   }
+} catch (err) {
+  console.log(err);
+  return res.send({
+    status: "ERR",
+    msg: "Something went wrong",
+    data: null,
+  });
+}
 };
 
 userController.updateUser = async (req, res) => {
