@@ -17,6 +17,10 @@ userService.getusers = async () => {
   return User.find({});
 };
 
+//get user by id
+userService.findUserById = async (id) => {
+  return User.findById(id);
+};
 //delete User
 userService.deleteUser = async (id, updateFields) => {
   return User.findByIdAndUpdate(

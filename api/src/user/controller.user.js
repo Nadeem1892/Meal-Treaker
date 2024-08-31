@@ -23,7 +23,7 @@ userController.registerUser = async (req, res) => {
     }
 
     //Check user
-    const  data  = await userService.getUserEmail(email);
+    const data = await userService.getUserEmail(email);
     if (data.length) {
       return res.send({
         status: "ERR",
@@ -62,8 +62,17 @@ userController.userLogin = async (req, res) => {
     }
 
     let user = await userService.getUserEmail(email);
+  
 
     if (user.length && user[0]?.email === email) {
+
+      if (user[0]?.isDeleted) {
+        return res.send({
+          status: "ERR",
+          message: "User account is deleted or deactivated.",
+          data: null,
+        });
+      }
       let { password: hash } = user[0];
       let isMatched = bcrypt.compareSync(password, hash);
 
@@ -94,7 +103,7 @@ userController.userLogin = async (req, res) => {
       return res.send({ message: "User not found or Email mismatch" });
     }
   } catch (error) {
-    return res.send({ message: "Somthing want wrong", Error:error });
+    return res.send({ message: "Somthing want wrong", Error: error });
   }
 };
 
@@ -111,46 +120,50 @@ userController.getUsers = async (req, res) => {
 };
 
 userController.deleteUser = async (req, res) => {
-try {
-  const { id } = req.params;
-  // Mark user as deleted by setting isDeleted to true
-  const deleteUser = await userService.deleteUser(id, {
-    $set: { isDeleted: true },
-  });
+  try {
+    const { id } = req.params;
+    // Find the user by ID
+    const existingUser = await userService.findUserById(id);
+    // const deleteUser = await userService.deleteUser(id, {
+    //   $set: { isDeleted: true },
+    // });
+    // const existingUser = await userService.findUserById(id);
 
-  console.log(deleteUser);
-  
-  if (!deleteUser) {
-    // If the user doesn't exist (no user with that id)
+    if (!existingUser) {
+      return res.send({
+        msg: "User not found.",
+        data: null,
+      });
+    }
+
+    if (existingUser?.isDeleted) {
+      // If the user is already marked as deleted
+      return res.send({
+        status: "OK",
+        msg: "This user was already deleted.",
+        data: existingUser._id,
+      });
+    }
+    const deleteUser = await userService.deleteUser(id, {
+      $set: { isDeleted: true },
+    });
+
+    if (deleteUser.isDeleted) {
+      // User was just marked as deleted
+      return res.send({
+        status: "OK",
+        msg: "User successfully deleted.",
+        data: deleteUser._id,
+      });
+    }
+  } catch (err) {
+    console.log(err);
     return res.send({
       status: "ERR",
-      msg: "User not found.",
+      msg: "Something went wrong",
       data: null,
     });
-  } else if (deleteUser.isDeleted) {
-    // Check if the user was already marked as deleted
-    return res.send({
-      status: "OK",
-      msg: "User successfully deleted.",
-      data: deleteUser,
-    });
-  } else {
-    // User was just marked as deleted
- 
-    return res.send({
-      status: "OK",
-      msg: "This user was already deleted.",
-      data: deleteUser._id,
-    });
   }
-} catch (err) {
-  console.log(err);
-  return res.send({
-    status: "ERR",
-    msg: "Something went wrong",
-    data: null,
-  });
-}
 };
 
 userController.updateUser = async (req, res) => {
