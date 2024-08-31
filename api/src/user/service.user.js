@@ -17,10 +17,6 @@ userService.getusers = async () => {
   return User.find({});
 };
 
-//get user by id
-userService.findUserById = async (id) => {
-  return User.findById(id);
-};
 //delete User
 userService.deleteUser = async (id, updateFields) => {
   return User.findByIdAndUpdate(
@@ -39,7 +35,7 @@ userService.verifyCurrentPassword = async (user, currentPassword) => {
   // Compare the current password with the stored hashed password
   return await bcrypt.compare(currentPassword, user.password);
 },
-
+//get user by id 
 userService.getUserById = async (id) => {
   // Fetch the user by ID from the database
   return await User.findById(id);

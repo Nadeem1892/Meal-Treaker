@@ -123,7 +123,7 @@ userController.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
     // Find the user by ID
-    const existingUser = await userService.findUserById(id);
+    const existingUser = await userService.getUserById(id);
     // const deleteUser = await userService.deleteUser(id, {
     //   $set: { isDeleted: true },
     // });
