@@ -50,4 +50,7 @@ userService.updatePassword = async (id, updatePass) => {
   return await User.findByIdAndUpdate(id,{password:updatePass},{new:true});
 }
 
+
+
+
 module.exports = userService;

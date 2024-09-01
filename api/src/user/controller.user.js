@@ -182,7 +182,7 @@ userController.updateUser = async (req, res) => {
     const updateUserOne = await userService.updateuser(id, {
       name,
       email,
-      password,
+     
     });
     return res.send({
       status: "OK",
