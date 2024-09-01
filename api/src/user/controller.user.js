@@ -77,7 +77,9 @@ userController.userLogin = async (req, res) => {
       let isMatched = bcrypt.compareSync(password, hash);
 
       if (isMatched) {
-        var token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
+       
+        var token = jwt.sign({ _id: user[0]?._id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+        
 
         return res.send({
           status: "OK",
@@ -174,7 +176,7 @@ userController.updateUser = async (req, res) => {
     if (!name || !email) {
       return res.send({
         status: "ERR",
-        msg: "name, email, password are required",
+        msg: "name, email are required",
         data: null,
       });
     }
@@ -202,6 +204,8 @@ userController.updatepassword = async (req, res) => {
 
     // Ensure the ID in the token matches the ID in the request
     if (req._id !== id) {
+      console.log(req?._id,"req")
+      console.log(id,"params")
       return res.send({
         status: "ERR",
         msg: "You are not authorized to update this user's password",
