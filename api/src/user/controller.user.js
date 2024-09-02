@@ -6,15 +6,31 @@ const userController = {};
 
 userController.registerUser = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword } = req.body;
-    // if (password !== confirmPassword) {
-    //   return res.status(400).json({ message: "Passwords do not match" });
-    // }
+    const {
+      name,
+      email,
+      password,
+      confirmPassword,
+      age,
+      weight,
+      height,
+      goal,
+    } = req.body;
+
     // validation of Fields
-    if (!name || !email || !password || !confirmPassword) {
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !age ||
+      !weight ||
+      !height ||
+      !goal
+    ) {
       return res.send({
         status: "ERR",
-        msg: "name, email, password are required",
+        msg: "Fields are required",
         data: null,
       });
     }
@@ -37,6 +53,10 @@ userController.registerUser = async (req, res) => {
       name,
       email,
       password: hash,
+      age,
+      weight,
+      height,
+      goal,
     });
     return res.send({
       status: "OK",
@@ -62,10 +82,8 @@ userController.userLogin = async (req, res) => {
     }
 
     let user = await userService.getUserEmail(email);
-  
 
     if (user.length && user[0]?.email === email) {
-
       if (user[0]?.isDeleted) {
         return res.send({
           status: "ERR",
@@ -77,9 +95,9 @@ userController.userLogin = async (req, res) => {
       let isMatched = bcrypt.compareSync(password, hash);
 
       if (isMatched) {
-       
-        var token = jwt.sign({ _id: user[0]?._id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
-        
+        var token = jwt.sign({ _id: user[0]?._id }, process.env.TOKEN_SECRET, {
+          expiresIn: "1h",
+        });
 
         return res.send({
           status: "OK",
@@ -89,7 +107,12 @@ userController.userLogin = async (req, res) => {
             userId: user[0]?._id,
             name: user[0]?.name,
             email: user[0]?.email,
+            age: user[0]?.age,
+            weight: user[0]?.weight,
+            height: user[0]?.height,
+            goal: user[0]?.goal,
           },
+
           code: "OK",
           issue: null,
         });
@@ -184,7 +207,6 @@ userController.updateUser = async (req, res) => {
     const updateUserOne = await userService.updateuser(id, {
       name,
       email,
-     
     });
     return res.send({
       status: "OK",
@@ -204,8 +226,8 @@ userController.updatepassword = async (req, res) => {
 
     // Ensure the ID in the token matches the ID in the request
     if (req._id !== id) {
-      console.log(req?._id,"req")
-      console.log(id,"params")
+      console.log(req?._id, "req");
+      console.log(id, "params");
       return res.send({
         status: "ERR",
         msg: "You are not authorized to update this user's password",

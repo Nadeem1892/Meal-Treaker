@@ -12,10 +12,27 @@ const userSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    age:{
+        type:Number,
+        require:true
+    },
+    weight:{
+        type:Number,
+        require:true
+    },
+    height:{
+        type:Number,
+        require:true
+    },
+    goal:{
+        type:String,
+        require:true
+    },
     isDeleted:{
         type:Boolean,
         required:false
-    }
+    },
+   
 },
 {timestamps: true}
 )
