@@ -12,5 +12,16 @@ mealService.getMeals = async (userId) => {
 return await Meal.find({userId})
 }
 
+//get mealsbydate
+// mealService.getMealsByDate = async (userId, startDate, endDate) => {
+//     return await Meal.find({
+//       userId,
+//       date: {
+//         $gte: startDate,
+//         $lte: endDate
+//       }
+//     });
+//   };
+
 
 module.exports = mealService
