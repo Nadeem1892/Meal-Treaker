@@ -6,37 +6,16 @@ const userController = {};
 
 userController.registerUser = async (req, res) => {
   try {
+
     const {
       name,
       email,
       password,
-      confirmPassword,
       age,
       weight,
       height,
       goal,
     } = req.body;
-
-    // validation of Fields
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !confirmPassword ||
-      !age ||
-      !weight ||
-      !height ||
-      !goal
-    ) {
-      return res.send({
-        status: "ERR",
-        msg: "Fields are required",
-        data: null,
-      });
-    }
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: "Passwords do not match" });
-    }
 
     //Check user
     const data = await userService.getUserEmail(email);
@@ -58,10 +37,22 @@ userController.registerUser = async (req, res) => {
       height,
       goal,
     });
+    
+    var token = jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET);
     return res.send({
       status: "OK",
       msg: "User Register Successfully",
-      data: newUser,
+      data: {
+        _id: newUser._id,
+        token, 
+        name: newUser.name,
+        email: newUser.email,
+        age: newUser.age,
+        weight: newUser.weight,
+        height: newUser.height,
+        goal: newUser.goal,
+        
+      },
     });
   } catch (err) {
     return res.send({ status: "ERR", msg: "something went wrong", data: null });
@@ -71,15 +62,6 @@ userController.registerUser = async (req, res) => {
 userController.userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // check validation
-    if (!email || !password) {
-      return res.send({
-        status: "ERR",
-        message: "Email or Password are required",
-        data: null,
-      });
-    }
 
     let user = await userService.getUserEmail(email);
 
@@ -95,9 +77,7 @@ userController.userLogin = async (req, res) => {
       let isMatched = bcrypt.compareSync(password, hash);
 
       if (isMatched) {
-        var token = jwt.sign({ _id: user[0]?._id }, process.env.TOKEN_SECRET, {
-          expiresIn: "1h",
-        });
+        var token = jwt.sign({ _id: user[0]?._id }, process.env.TOKEN_SECRET);
 
         return res.send({
           status: "OK",

@@ -6,21 +6,7 @@ const mealController = {};
 mealController.addMeal = async (req, res) => {
   try {
     const { meal_name, calories, protein, carbs, fat, type, date } = req.body;
-    // check validation
-    if (
-      !meal_name ||
-      !calories ||
-      !protein ||
-      !carbs ||
-      !fat ||
-      !type ||
-      !date
-    ) {
-      return res.send({
-        message: "Fiels are required",
-      });
-    }
-
+    
     const newMeal = await mealServices.addMeal({
       meal_name,
       calories,
@@ -46,7 +32,9 @@ mealController.getMeals = async (req, res) => {
   try {
     const userId = req._id;
     const meals = await mealServices.getMeals(userId);
-
+    if (!meals.length) {
+     return res.send({ message: "Data not found", meals });
+    }
     res.status(200).json({ message: "Meals retrieved successfully", meals });
   } catch (error) {
     res.status(500).json({ message: "Error retrieving meals", error });

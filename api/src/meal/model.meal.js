@@ -27,6 +27,7 @@ const maelSchema = mongoose.Schema(
     },
     type: {
       type: String,
+      enum: ['Breakfast', 'Lunch', 'Dinner', 'Snack'],
       required: true
     },
     date: {
