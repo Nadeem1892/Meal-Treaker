@@ -5,7 +5,7 @@ const mealController = {};
 //Add Meal Controller
 mealController.addMeal = async (req, res) => {
   try {
-    const { meal_name, calories, protein, carbs, fat, type, date } = req.body;
+    const { meal_name, calories, protein, carbs, fat, type} = req.body;
     
     const newMeal = await mealServices.addMeal({
       meal_name,
@@ -14,7 +14,6 @@ mealController.addMeal = async (req, res) => {
       carbs,
       fat,
       type,
-      date,
       userId: req?._id,
     });
 

@@ -6,7 +6,7 @@ const mealController = require("./controller.meal")
 
 router.post("/add-meal",middleWere,validate(mealValidationSchema), mealController.addMeal)
 router.get("/get-meals",middleWere, mealController.getMeals)
-// router.get("/getMealsBydate/:startDate/:endDate",middleWere, mealController.getMealsByDateRange)
+
 
 
 module.exports = router

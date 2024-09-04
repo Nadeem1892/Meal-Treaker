@@ -3,8 +3,8 @@ const mealService = {}
 
 
 //Add Meals
-mealService.addMeal = async ({meal_name, calories, protein, carbs, fat, type, date, userId}) => {
-return await Meal.create({meal_name, calories, protein, carbs, fat, type, date, userId})
+mealService.addMeal = async ({meal_name, calories, protein, carbs, fat, type, userId}) => {
+return await Meal.create({meal_name, calories, protein, carbs, fat, type, userId})
 }
 
 //get all meals
