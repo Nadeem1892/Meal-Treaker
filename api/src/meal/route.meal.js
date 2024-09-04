@@ -5,7 +5,7 @@ const validate = require("../../middelWere/validationMiddleware")
 const mealController = require("./controller.meal")
 
 router.post("/add-meal",middleWere,validate(mealValidationSchema), mealController.addMeal)
-router.get("/get-meals",middleWere, mealController.getMeals)
+router.get("/get-meals/:date",middleWere, mealController.getMeals)
 
 
 

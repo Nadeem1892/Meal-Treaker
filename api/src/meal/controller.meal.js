@@ -6,6 +6,7 @@ const mealController = {};
 mealController.addMeal = async (req, res) => {
   try {
     const { meal_name, calories, protein, carbs, fat, type} = req.body;
+ 
     
     const newMeal = await mealServices.addMeal({
       meal_name,
@@ -26,11 +27,14 @@ mealController.addMeal = async (req, res) => {
   }
 };
 
-// get All meal by users
+//get meals with date
 mealController.getMeals = async (req, res) => {
   try {
+    const { date } = req.params;
     const userId = req._id;
-    const meals = await mealServices.getMeals(userId);
+
+    const meals = await mealServices.getMeals(userId,date);
+    console.log(meals)
     if (!meals.length) {
      return res.send({ message: "Data not found", meals });
     }
@@ -40,27 +44,6 @@ mealController.getMeals = async (req, res) => {
   }
 };
 
-//get meals with date
-
-//  mealController.getMealsByDateRange = async (req, res) => {
-//     try {
-//         const { startDate, endDate } = req.params;
-//         console.log('Start Date:', startDate, 'End Date:', endDate);
-//         const userId = req._id; // Extracted from JWT token
     
-//         // Fetch meals by date range
-//         const meals = await mealServices.getMealsByDate(userId, startDate, endDate);
-//       console.log(meals)
-//         if (!meals.length) {
-//           return res.status(200).send({ message: "Meals not found" });
-//         }
-    
-//         return res.status(200).send({ message: "Meals retrieved successfully", meals });
-//       } catch (error) {
-//         res.status(500).json({ message: "Error retrieving meals", error });
-//       }
-//   };
-  
-  
 
 module.exports = mealController;

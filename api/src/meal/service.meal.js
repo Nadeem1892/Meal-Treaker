@@ -8,20 +8,9 @@ return await Meal.create({meal_name, calories, protein, carbs, fat, type, userId
 }
 
 //get all meals
-mealService.getMeals = async (userId) => {
-return await Meal.find({userId})
+mealService.getMeals = async (userId, date) => {
+return await Meal.find({userId,date})
 }
-
-//get mealsbydate
-// mealService.getMealsByDate = async (userId, startDate, endDate) => {
-//     return await Meal.find({
-//       userId,
-//       date: {
-//         $gte: startDate,
-//         $lte: endDate
-//       }
-//     });
-//   };
 
 
 module.exports = mealService
