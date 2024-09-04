@@ -19,6 +19,7 @@ userController.registerUser = async (req, res) => {
 
     //Check user
     const data = await userService.getUserEmail(email);
+    
     if (data.length) {
       return res.send({
         status: "ERR",
@@ -115,9 +116,13 @@ userController.userLogin = async (req, res) => {
 userController.getUsers = async (req, res) => {
   try {
     let getuser = await userService.getusers();
+   
     if (!getuser.length) {
       return res.send({ status: "ERR", msg: "Users not avalable", data: null });
     }
+    // if (getuser) {
+      
+    // }
     return res.send({ status: "OK", msg: "Get Users", data: getuser });
   } catch (err) {
     return res.send({ status: "ERR", msg: "something went wrong", data: null });
