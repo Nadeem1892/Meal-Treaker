@@ -8,7 +8,7 @@ userService.registerUser = async ({ name, email, password, age, weight, height, 
 };
 
 //  check Email & Password
-userService.getUserEmail = async (email,isDeleted) => {
+userService.getUserEmail = async (email) => {
   return await User.find({email})
 };
 
