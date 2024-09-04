@@ -36,19 +36,13 @@ const registrationSchema = Joi.object({
     'number.min': 'Age cannot be negative',
     'any.required': 'Age is required',
   }),
-  weight: Joi.number().positive().required().messages({
-    'number.base': 'Weight must be a number',
-    'number.positive': 'Weight must be a positive number',
-    'any.required': 'Weight is required',
+  weight: Joi.string().trim().required().messages({
+    'string.empty': 'Weight is required',
   }),
-  height: Joi.number().positive().required().messages({
-    'number.base': 'Height must be a number',
-    'number.positive': 'Height must be a positive number',
-    'any.required': 'Height is required',
+  height: Joi.string().trim().required().messages({
+    'string.empty': 'Height is required',
   }),
-  goal: Joi.string().trim().required().messages({
-    'string.empty': 'Goal is required',
-  }),
+  
 });
 
 // Login schema

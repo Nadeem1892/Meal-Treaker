@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const userService = {};
 
 // register user
-userService.registerUser = async ({ name, email, password, age, weight, height, goal}) => {
-  return await User.create({name,email,password,age, weight, height, goal})
+userService.registerUser = async ({ name, email, password, age, weight, height}) => {
+  return await User.create({name,email,password,age, weight, height})
 };
 
 //  check Email & Password
@@ -12,23 +12,23 @@ userService.getUserEmail = async (email) => {
   return await User.find({email})
 };
 
-//get Users
-userService.getusers = async () => {
-  return User.find({ isDeleted: { $ne: true } });
-};
+// //get Users
+// userService.getusers = async () => {
+//   return User.find({ isDeleted: { $ne: true } });
+// };
 
-//delete User
-userService.deleteUser = async (id, updateFields) => {
-  return User.findByIdAndUpdate(
-    { _id: id },
-    { ...updateFields },
-    { new: true }
-  );
-};
+// //delete User
+// userService.deleteUser = async (id, updateFields) => {
+//   return User.findByIdAndUpdate(
+//     { _id: id },
+//     { ...updateFields },
+//     { new: true }
+//   );
+// };
 
-userService.updateuser = async (id,{ name, email}) => {
-return User.findOneAndUpdate({_id:id},{name, email})
-}
+// userService.updateuser = async (id,{ name, email}) => {
+// return User.findOneAndUpdate({_id:id},{name, email})
+// }
 
 userService.verifyCurrentPassword = async (user, currentPassword) => {
 

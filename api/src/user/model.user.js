@@ -17,14 +17,10 @@ const userSchema = mongoose.Schema({
         require:true
     },
     weight:{
-        type:Number,
+        type:String,
         require:true
     },
     height:{
-        type:Number,
-        require:true
-    },
-    goal:{
         type:String,
         require:true
     },

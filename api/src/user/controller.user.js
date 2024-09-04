@@ -6,7 +6,6 @@ const userController = {};
 
 userController.registerUser = async (req, res) => {
   try {
-
     const {
       name,
       email,
@@ -14,7 +13,6 @@ userController.registerUser = async (req, res) => {
       age,
       weight,
       height,
-      goal,
     } = req.body;
 
     //Check user
@@ -36,7 +34,6 @@ userController.registerUser = async (req, res) => {
       age,
       weight,
       height,
-      goal,
     });
     
     var token = jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET);
@@ -51,8 +48,6 @@ userController.registerUser = async (req, res) => {
         age: newUser.age,
         weight: newUser.weight,
         height: newUser.height,
-        goal: newUser.goal,
-        
       },
     });
   } catch (err) {
@@ -100,9 +95,9 @@ userController.userLogin = async (req, res) => {
       } else {
         return res.send({
           status: false,
-          message: "Login failed",
+          message: "Invalid  password",
           code: "ERROR",
-          issue: "Invalid  password",
+          issue: "Login failed",
         });
       }
     } else {
@@ -113,96 +108,105 @@ userController.userLogin = async (req, res) => {
   }
 };
 
-userController.getUsers = async (req, res) => {
-  try {
-    let getuser = await userService.getusers();
+// userController.getUsers = async (req, res) => {
+//   try {
+//     let getuser = await userService.getusers();
    
-    if (!getuser.length) {
-      return res.send({ status: "ERR", msg: "Users not avalable", data: null });
-    }
-    // if (getuser) {
+//     if (!getuser.length) {
+//       return res.send({ status: "ERR", msg: "Users not avalable", data: null });
+//     }
+//     // if (getuser) {
       
-    // }
-    return res.send({ status: "OK", msg: "Get Users", data: getuser });
-  } catch (err) {
-    return res.send({ status: "ERR", msg: "something went wrong", data: null });
-  }
-};
+//     // }
+//     return res.send({ status: "OK", msg: "Get Users", data: getuser });
+//   } catch (err) {
+//     return res.send({ status: "ERR", msg: "something went wrong", data: null });
+//   }
+// };
 
-userController.deleteUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    // Find the user by ID
-    const existingUser = await userService.getUserById(id);
-    // const deleteUser = await userService.deleteUser(id, {
-    //   $set: { isDeleted: true },
-    // });
-    // const existingUser = await userService.findUserById(id);
+// userController.deleteUser = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     // Find the user by ID
+//     const existingUser = await userService.getUserById(id);
+//     // const deleteUser = await userService.deleteUser(id, {
+//     //   $set: { isDeleted: true },
+//     // });
+//     // const existingUser = await userService.findUserById(id);
 
-    if (!existingUser) {
-      return res.send({
-        msg: "User not found.",
-        data: null,
-      });
-    }
+//     if (!existingUser) {
+//       return res.send({
+//         msg: "User not found.",
+//         data: null,
+//       });
+//     }
 
-    if (existingUser?.isDeleted) {
-      // If the user is already marked as deleted
-      return res.send({
-        status: "OK",
-        msg: "This user was already deleted.",
-        data: existingUser._id,
-      });
-    }
-    const deleteUser = await userService.deleteUser(id, {
-      $set: { isDeleted: true },
-    });
+//     if (existingUser?.isDeleted) {
+//       // If the user is already marked as deleted
+//       return res.send({
+//         status: "OK",
+//         msg: "This user was already deleted.",
+//         data: existingUser._id,
+//       });
+//     }
+//     const deleteUser = await userService.deleteUser(id, {
+//       $set: { isDeleted: true },
+//     });
 
-    if (deleteUser.isDeleted) {
-      // User was just marked as deleted
-      return res.send({
-        status: "OK",
-        msg: "User successfully deleted.",
-        data: deleteUser._id,
-      });
-    }
-  } catch (err) {
-    console.log(err);
-    return res.send({
-      status: "ERR",
-      msg: "Something went wrong",
-      data: null,
-    });
-  }
-};
+//     if (deleteUser.isDeleted) {
+//       // User was just marked as deleted
+//       return res.send({
+//         status: "OK",
+//         msg: "User successfully deleted.",
+//         data: deleteUser._id,
+//       });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     return res.send({
+//       status: "ERR",
+//       msg: "Something went wrong",
+//       data: null,
+//     });
+//   }
+// };
 
-userController.updateUser = async (req, res) => {
-  try {
-    const { name, email } = req.body;
-    const { id } = req.params;
-    // validation of Fields
-    if (!name || !email) {
-      return res.send({
-        status: "ERR",
-        msg: "name, email are required",
-        data: null,
-      });
-    }
+//  userController.updateUser = async (req, res) => {
+//   try {
+//     const { name, email } = req.body;
+//     const { id } = req.params;
+//     // validation of Fields
+//     if (!name || !email) {
+//       return res.send({
+//         status: "ERR",
+//         msg: "name, email are required",
+//         data: null,
+//       });
+//     }
 
-    const updateUserOne = await userService.updateuser(id, {
-      name,
-      email,
-    });
-    return res.send({
-      status: "OK",
-      msg: "User Update Successfulluy",
-      data: updateUserOne,
-    });
-  } catch (error) {
-    console.log(err);
-    return res.send({ status: "ERR", msg: "something went wrong", data: null });
-  }
-};
+//     const updateUserOne = await userService.updateuser(id, {
+//       name,
+//       email,
+//     });
+//     if (!updateUserOne) {
+//       return res.send({
+//         status: "OK",
+//         msg: "User does not exist",
+//         data: updateUserOne,
+//       });
+//     }
+
+    
+//     return res.send({
+//       status: "OK",
+//       msg: "User Update Successfulluy",
+//       data: updateUserOne,
+//     });
+//   } catch (error) {
+//     console.log(err);
+//     return res.send({ status: "ERR", msg: "something went wrong", data: null });
+//   }
+// };
 
 userController.updatepassword = async (req, res) => {
   try {
@@ -239,7 +243,7 @@ userController.updatepassword = async (req, res) => {
         data: null,
       });
     }
-
+    
     // Verify the current password with the hashed password
     const isCurrentPasswordValid = await userService.verifyCurrentPassword(
       user,
@@ -264,12 +268,12 @@ userController.updatepassword = async (req, res) => {
 
     // Hash the new password and update it in the database
     const updatePass = await userService.hashPassword(newPassword);
+    
     await userService.updatePassword(id, updatePass);
 
     return res.send({
       status: "OK",
       msg: "Password updated successfully",
-      data: null,
     });
   } catch (error) {
     console.log(error);

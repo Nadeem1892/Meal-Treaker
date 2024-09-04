@@ -7,9 +7,9 @@ const validate = require("../../middelWere/validationMiddleware")
 
 router.post("/registerUser",validate(registrationSchema), userController.registerUser);
 router.post("/login", validate(loginSchema), userController.userLogin);
-router.get("/users",userController.getUsers)
-router.delete("/delete/:id", userController.deleteUser)
-router.patch("/update/:id", userController.updateUser)
+// router.get("/users",userController.getUsers)
+// router.delete("/delete/:id", userController.deleteUser)
+// router.patch("/update/:id", userController.updateUser)
 router.patch("/updatePassword/:id", middleWere, userController.updatepassword)
 
 module.exports = router;
