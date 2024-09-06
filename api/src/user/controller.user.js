@@ -36,7 +36,7 @@ userController.registerUser = async (req, res) => {
       height,
     });
     
-    var token = jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET);
+    var token = jwt.sign({ _id: newUser._id, username: newUser.name }, process.env.TOKEN_SECRET);
     return res.send({
       status: "OK",
       msg: "User Register Successfully",
@@ -73,7 +73,7 @@ userController.userLogin = async (req, res) => {
       let isMatched = bcrypt.compareSync(password, hash);
 
       if (isMatched) {
-        var token = jwt.sign({ _id: user[0]?._id }, process.env.TOKEN_SECRET);
+        var token = jwt.sign({ _id: user[0]?._id, username: user[0]?.name }, process.env.TOKEN_SECRET);
 
         return res.send({
           status: "OK",
