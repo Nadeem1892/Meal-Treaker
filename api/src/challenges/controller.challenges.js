@@ -13,7 +13,7 @@ challengesController.addChallenges = async (req, res) => {
         dailyUpdates.push({ date: currentDate.format("DD-MM-YYYY"), isChecked: false });
         currentDate.add(1, "days");
       }
- // Check if endDate has already passed
+ // Check if endDate has already passed ..
  const today = moment().format("DD-MM-YYYY");
  let isCompleted = today > endDate ? false : true;
 
