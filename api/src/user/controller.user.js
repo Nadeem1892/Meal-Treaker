@@ -281,4 +281,31 @@ userController.updatepassword = async (req, res) => {
   }
 };
 
+
+userController.getUserProfile = async (req, res) => {
+  try {
+    const userId = req._id; // This is set by the authenticateToken middleware
+    const user = await userService.getUserById(userId);
+
+    if (!user) {
+      return res.status(404).send({ status: "ERR", msg: "User not found." });
+    }
+
+    return res.status(200).send({
+      status: "OK",
+      msg: "User Profile Retrieved Successfully",
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        age: user.age,
+        weight: user.weight,
+        height: user.height,
+      },
+    });
+  } catch (error) {
+    return res.status(500).send({ status: "ERR", msg: "Something went wrong", error: error.message }); 
+  }
+}
+
 module.exports = userController;

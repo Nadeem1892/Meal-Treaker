@@ -39,6 +39,7 @@ userService.verifyCurrentPassword = async (user, currentPassword) => {
 userService.getUserById = async (id) => {
   // Fetch the user by ID from the database
   return await User.findById(id);
+  
 },
 
 userService.hashPassword = async (password)=> {

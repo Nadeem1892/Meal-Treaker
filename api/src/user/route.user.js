@@ -11,5 +11,6 @@ router.post("/login", validate(loginSchema), userController.userLogin);
 // router.delete("/delete/:id", userController.deleteUser)
 // router.patch("/update/:id", userController.updateUser)
 router.patch("/updatePassword/:id", middleWere, userController.updatepassword)
+router.get("/profile", middleWere, userController.getUserProfile)
 
 module.exports = router;
