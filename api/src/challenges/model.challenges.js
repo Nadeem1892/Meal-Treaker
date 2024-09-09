@@ -8,7 +8,7 @@ const dailyUpdateSchema = new mongoose.Schema(
     },
     isChecked: {
         type: Boolean,
-        default: false // Default value for whether the daily update is checked
+        default: false // Default value for whether the daily update is checked ...
       }
   },
   { _id: false }
