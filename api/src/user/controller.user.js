@@ -101,7 +101,7 @@ userController.userLogin = async (req, res) => {
         });
       }
     } else {
-      return res.send({ message: "User not found or Email mismatch" });
+      return res.send({ message: "User not found" });
     }
   } catch (error) {
     return res.send({ message: "Somthing want wrong", Error: error });
