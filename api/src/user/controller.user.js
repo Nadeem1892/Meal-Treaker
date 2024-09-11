@@ -21,7 +21,7 @@ userController.registerUser = async (req, res) => {
     if (data.length) {
       return res.send({
         status: "ERR",
-        msg: "Email Already Exists",
+        message: "Email Already Exists",
         data: data[0]?.email,
       });
     }
@@ -39,7 +39,7 @@ userController.registerUser = async (req, res) => {
     var token = jwt.sign({ _id: newUser._id, username: newUser.name }, process.env.TOKEN_SECRET);
     return res.send({
       status: "OK",
-      msg: "User Register Successfully",
+      message: "User Register Successfully",
       data: {
         _id: newUser._id,
         token, 
@@ -51,7 +51,7 @@ userController.registerUser = async (req, res) => {
       },
     });
   } catch (err) {
-    return res.send({ status: "ERR", msg: "something went wrong", data: null });
+    return res.send({ status: "ERR", message: "something went wrong", data: null });
   }
 };
 
