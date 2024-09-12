@@ -10,7 +10,7 @@ module.exports = (req, res, next)=>{
     next()
 
   }catch(err){
-    return res.send({status:"ERR", msg:"Unauthorized access", data:null})
+    return res.send({status:"ERR", message:"Unauthorized access", data:null})
   }
  
 

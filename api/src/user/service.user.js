@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const userService = {};
 
 // register user
-userService.registerUser = async ({ name, email, password, age, weight, height}) => {
-  return await User.create({name,email,password,age, weight, height})
+userService.registerUser = async ({ name, email,gender, password, age, weight, height}) => {
+  return await User.create({name,email,gender,password,age, weight, height})
 };
 
 //  check Email & Password

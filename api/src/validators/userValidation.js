@@ -26,11 +26,20 @@ const registrationSchema = Joi.object({
     'string.min': 'Name must be at least 1 character long',
   }),
   email,
+  gender: Joi.string()
+    .valid('male', 'female', 'other')
+    .required()
+    .messages({
+      'any.only': 'Gender must be either male, female, or other',
+      'any.required': 'Gender is required',
+    }),
   password,
-  confirmPassword: Joi.any().valid(Joi.ref('password')).required().messages({
-    'any.only': 'Passwords do not match',
-    'any.required': 'Confirm Password is required',
-  }),
+  confirmPassword: Joi.string()
+    .valid(Joi.ref('password'))
+    .optional()
+    .messages({
+      'any.only': 'Passwords do not match',
+    }),
   age: Joi.number().integer().min(0).required().messages({
     'number.base': 'Age must be a number',
     'number.min': 'Age cannot be negative',

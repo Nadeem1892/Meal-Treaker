@@ -9,6 +9,7 @@ userController.registerUser = async (req, res) => {
     const {
       name,
       email,
+      gender,
       password,
       age,
       weight,
@@ -30,6 +31,7 @@ userController.registerUser = async (req, res) => {
     let newUser = await userService.registerUser({
       name,
       email,
+      gender,
       password: hash,
       age,
       weight,
@@ -45,6 +47,7 @@ userController.registerUser = async (req, res) => {
         token, 
         name: newUser.name,
         email: newUser.email,
+        gender:newUser.gender,
         age: newUser.age,
         weight: newUser.weight,
         height: newUser.height,
@@ -83,6 +86,7 @@ userController.userLogin = async (req, res) => {
             userId: user[0]?._id,
             name: user[0]?.name,
             email: user[0]?.email,
+            gender:user[0]?.gender,
             age: user[0]?.age,
             weight: user[0]?.weight,
             height: user[0]?.height,
