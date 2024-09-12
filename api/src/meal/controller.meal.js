@@ -18,7 +18,7 @@ mealController.addMeal = async (req, res) => {
 
     return res
       .status(201)
-      .send({ status: "OK", msg: "Meal Created Successfulluy", data: newMeal });
+      .send({ status: "OK", message: "Meal Created Successfulluy", data: newMeal });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: "Error adding meal", error });
