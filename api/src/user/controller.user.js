@@ -63,6 +63,7 @@ userController.userLogin = async (req, res) => {
     const { email, password } = req.body;
 
     let user = await userService.getUserEmail(email);
+   
 
     if (user.length && user[0]?.email === email) {
       if (user[0]?.isDeleted) {
