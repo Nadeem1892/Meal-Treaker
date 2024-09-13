@@ -87,6 +87,7 @@ challengesController.getChallenges = async (req, res) => {
     try {
         const userId = req?._id
         const getChallenges = await chanllengesService.getChallenge(userId)
+        console.log(getChallenges)
         return res.status(201).send({
             status: "OK",
             msg: "Successfulluy",
