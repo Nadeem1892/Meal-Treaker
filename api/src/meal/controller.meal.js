@@ -32,7 +32,7 @@ mealController.getMeals = async (req, res) => {
     const userId = req._id;
 
     const meals = await mealServices.getMeals(userId,date);
-    console.log(meals)
+    
     if (!meals.length) {
      return res.send({ message: "Data not found", meals });
     }
