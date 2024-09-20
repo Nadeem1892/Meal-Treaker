@@ -6,6 +6,10 @@ serviceCategory.add = async ({categoryName}) => {
 return await  Category.create({categoryName})
 }
 
+serviceCategory.get = async () => {
+    return await Category.find({})
+}
+
 
 
 
