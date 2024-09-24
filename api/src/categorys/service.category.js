@@ -21,5 +21,11 @@ serviceCategory.getUserById = async (id) => {
   }
 
 
+  //update Servivce 
+
+  serviceCategory.updateCategory = async (id,{categoryName}) => {
+  return await Category.findOneAndUpdate({_id:id}, {categoryName})
+  }
+
 
 module.exports = serviceCategory

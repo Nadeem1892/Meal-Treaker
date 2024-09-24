@@ -43,7 +43,7 @@ categoryController.deleteCategory = async (req, res) => {
 
     if (!existingUser) {
             return res.send({
-              msg: "Category not existing",
+              message: "Category not existing",
               data: null,
             });
           }
@@ -52,19 +52,45 @@ categoryController.deleteCategory = async (req, res) => {
   
     return res.send({
               status: "OK",
-              msg: "Category deleted successfully",
+              message: "Category deleted successfully",
               data: dalete,
             });
   } catch (error) {
-    console.log(err);
+    console.log(error);
     return res.send({
       status: "ERR",
-      msg: "Something went wrong",
+      message: "Something went wrong",
       data: null,
     });
   }
 }
 
+// update
+categoryController.updateCategory = async (req, res) => {
+  try {
+    const {id} = req.params
+    const {categoryName} = req.body
+
+    const updateByCategory = await categoryService.updateCategory(id,{ categoryName })
+
+    if (!updateByCategory) {
+            return res.send({
+              status: "OK",
+              message: "User does not exist",
+              data: updateByCategory,
+            });
+          }
+
+          return res.send({
+                  status: "OK",
+                  message: "Category Update Successfulluy",
+                  data: updateByCategory,
+                });
+  } catch (error) {
+    console.log(err);
+    return res.send({ status: "ERR", message: "something went wrong", data: null });
+  }
+}
 
 
 module.exports = categoryController;
