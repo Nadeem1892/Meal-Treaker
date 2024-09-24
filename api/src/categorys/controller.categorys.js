@@ -34,12 +34,29 @@ categoryController.getCategory = async (req, res) => {
 };
 
 
+
+categoryController.getCategoryById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const getCategory = await categoryService.getCategoryById(id);
+    console.log(getCategory)
+    return res.send({
+      status: "OK",
+      message: "Get Category",
+      data: getCategory,
+    });
+  } catch (error) {
+    return res.send({ status: "Error", message: error, data: null });
+  }
+};
+
+
 //Delete
 
 categoryController.deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const existingUser = await categoryService.getUserById(id);
+    const existingUser = await categoryService.getCategoryById(id);
 
     if (!existingUser) {
             return res.send({

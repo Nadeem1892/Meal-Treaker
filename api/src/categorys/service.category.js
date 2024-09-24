@@ -11,7 +11,7 @@ serviceCategory.get = async () => {
 }
 
 //get user by id 
-serviceCategory.getUserById = async (id) => {
+serviceCategory.getCategoryById = async (id) => {
     // Fetch the user by ID from the database
     return await Category.findById(id);
   },
