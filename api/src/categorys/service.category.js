@@ -24,7 +24,7 @@ serviceCategory.getCategoryById = async (id) => {
   //update Servivce 
 
   serviceCategory.updateCategory = async (id,{categoryName}) => {
-  return await Category.findOneAndUpdate({_id:id}, {categoryName})
+  return await Category.findByIdAndUpdate({_id:id},{categoryName},{ new: true })
   }
 
 
