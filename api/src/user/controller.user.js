@@ -120,11 +120,6 @@ userController.userLogin = async (req, res) => {
 //     const { id } = req.params;
 //     // Find the user by ID
 //     const existingUser = await userService.getUserById(id);
-//     // const deleteUser = await userService.deleteUser(id, {
-//     //   $set: { isDeleted: true },
-//     // });
-//     // const existingUser = await userService.findUserById(id);
-
 //     if (!existingUser) {
 //       return res.send({
 //         msg: "User not found.",

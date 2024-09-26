@@ -39,7 +39,7 @@ categoryController.getCategoryById = async (req, res) => {
   try {
     const { id } = req.params;
     const getCategory = await categoryService.getCategoryById(id);
-    console.log(getCategory)
+   
     return res.send({
       status: "OK",
       message: "Get Category",
